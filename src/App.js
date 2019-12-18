@@ -41,7 +41,11 @@ class App extends Component {
       notes: this.state.notes.filter(note => note.id !== noteId)
     });
   };
-
+  handleAddFolder = folder => {
+    this.setState({
+      folders: [...this.state.folders, folder]
+    })
+  }
   renderNavRoutes() {
     return (
       <>
@@ -86,7 +90,8 @@ class App extends Component {
     const value = {
       notes: this.state.notes,
       folders: this.state.folders,
-      deleteNote: this.handleDeleteNote
+      deleteNote: this.handleDeleteNote,
+      addFolder: this.handleAddFolder,
     }
     return (
       <ApiContext.Provider value={value}>

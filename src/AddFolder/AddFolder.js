@@ -3,40 +3,52 @@ import './AddFolder.css';
 import ValidationError from '../ValidationError';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CircleButton from "../CircleButton/CircleButton";
+import ApiContext from "../ApiContext";
+import config from '../config';
+
 export default class AddFolder extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            title: {
-                value: '',
-                touched: false
-            }
-        }
-    }
-    updateTitle(title) {
-        this.setState({title: {value: title, touched: true}})
-    }
+    static contextType = ApiContext;
+    
     handleSubmit(event) {
         event.preventDefault();
-        const {title} = this.state;
-        console.log('Title is ', title);
-    }
-    validateTitle() {
-        const title = this.state.title.value.trim();
-        if(title.length === 0) {
-            return 'Title is required';
+        const {name} = event.target;
+        const folderName = {
+            name: name.value
         }
+        fetch(`${config.API__ENDPOINT}/folders`, {
+          method: "POST",
+          headers: {
+            "content-type": "application/json"
+          }
+        }).then(res => {
+          if (!res.ok) {
+            throw new Error(res.status);
+          }
+          return res.json();
+        }).then(data => {
+            name.value = ''
+            this.props.history.push('/')
+            this.context.updateName(data)
+        })
+        .catch(error => {
+        console.error({error});
+        })
+    }
+    
+    updateName(name) {
+        this.setState({ folders: [...this.context.folders, { name: name}] });
     }
     render() {
-        const titleError = this.validateTitle();
+        
+        const {folders = []} = this.context;
         return(
             <>
                 <form className='Add__Folder' onSubmit={e => this.handleSubmit(e)}>
                     <h2>Add Folder</h2>
                     <div className='form-group'>
                         <label htmlFor='title'>Title</label>
-                        <input type='text' className='title__field' name='title' id='title' onChange={e => this.updateTitle(e.target.value)}/>
-                        {this.state.title.touched && (<ValidationError message={titleError}/>)}
+                        <input type='text' className='title__field' name='title' id='title' onChange={e => this.updateName(e.target.value)}/>
+                        
                         <button type='submit'>Save</button>
                     </div>
                 </form>
