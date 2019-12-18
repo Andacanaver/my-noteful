@@ -12,12 +12,15 @@ class AddFolder extends Component {
     
     handleSubmit(event) {
         event.preventDefault();
-        const {name} = event.target;
+        const {name} = event.target
+        const id = this.props.match.params.folderId
         const folderName = {
-            name: name.value
+            name: name ,
+            id: id
         }
         fetch(`${config.API__ENDPOINT}/folders`, {
           method: "POST",
+          body: JSON.stringify(folderName),
           headers: {
             "content-type": "application/json"
           }
@@ -27,9 +30,8 @@ class AddFolder extends Component {
           }
           return res.json();
         }).then(data => {
-            name.value = ''
             this.props.history.push('/')
-            this.context.updateName(data)
+            this.context.addFolder(data)
         })
         .catch(error => {
         console.error({error});

@@ -5,7 +5,6 @@ import CircleButton from "../CircleButton/CircleButton";
 import ApiContext from '../ApiContext';
 import { countNotesForFolder } from "../notes-helpers";
 import "./NoteListNav.css";
-import AddFolder from '../AddFolder/AddFolder';
 export default class NoteListNav extends React.Component {
   static contextType = ApiContext;
   
