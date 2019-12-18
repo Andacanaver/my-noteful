@@ -5,8 +5,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CircleButton from "../CircleButton/CircleButton";
 import ApiContext from "../ApiContext";
 import config from '../config';
+import { withRouter } from 'react-router-dom';
 
-export default class AddFolder extends Component {
+class AddFolder extends Component {
     static contextType = ApiContext;
     
     handleSubmit(event) {
@@ -66,3 +67,5 @@ export default class AddFolder extends Component {
     }
 
 }
+
+export default withRouter(AddFolder)
